@@ -8,7 +8,7 @@ iptables
 Introduction: Basic concepts, setup and a basic rule
 ====================================================
 
-Concepts: Tables, hook pcoints and chains
+Concepts: Tables, hook points and chains
 ----------------------------------------
 
 iptables have 'tables' that group the types of rules you can perform, e.g. forwarding packets, rejecting packets. By default, you have ``nat``, ``filter`` and ``mangle``, which will be explained in due course.
@@ -188,6 +188,10 @@ Now let's apply our rule by issuing this command as root.
 
 We're slightly modifying what it was before to make it more precise. We're specifying an interface, ``lo``, and a destination, ``-d 192.168.1.6``. So the rule will match if the connection comes from localhost (our telnet command will send packets from this interface) and is directed at the specified IP address.
 
+.. sidebar:: Precise iptables rules
+
+	Above, we made the rule more precise. But if we'd left out 	``-d 192.168.1.6`` and ``-i lo``, we'd simply be saying match packets coming from any interface to any ip address, as long as they're going to a port number 1234.
+
 There should be no output from the above command, but if you run the listing command again you should see our new command:
 
 .. code:: shell
@@ -210,14 +214,10 @@ There should be no output from the above command, but if you run the listing com
 The new line is telling us: 
 
 #. If the protcol is TCP/IP, 
-#. from the 'lo', localhost, network interface to any other network interface, 
+#. from the 'lo', localhost, network interface
 #. from any IP address to 192.168.1.6
 #. and the destination port is 1234,
 #. then reject the packet with 'icmp-port-unreachable', the default response with you specify the REJECT target.
-   
-.. sidebar:: Precise iptables rules
-
-	Above, we made the rule more precise. But if we'd left out 	``-d 192.168.1.6`` and ``-i lo``, we'd simply be saying match packets coming from any interface to any ip address, as long as they're going to a port number 1234.
 
 Communication with our program, rule in place
 ---------------------------------------------
@@ -235,4 +235,4 @@ Here's the telnet output:
 
 Success!
 
-If we now flush to iptables rules with ``iptables -F`` and then verify the rule is gone with ``iftables -L -v``, and try to connect again we will see the iptables rule is no longer in place.
+If we now flush to iptables rules with ``iptables -F`` and then verify the rule is gone with ``iptables -L -v``, and try to connect again we will see the iptables rule is no longer in place.
