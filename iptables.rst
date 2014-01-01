@@ -157,8 +157,6 @@ The program will continue to accept connections for its duration.
 Applying our rule
 -----------------
 
-In the above telnet session, we saw we connected to the program -- i.e. iptables allowed us to connect -- by the line 'Connected to 192.168.1.6.'.
-
 Before we apply the rule we defined above, let's list all the rules in iptables, by running the command ``iptables -t filter -L -v`` as root:
 
 .. code:: shell
