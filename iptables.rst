@@ -8,7 +8,7 @@ iptables
 Introduction: Basic concepts, setup and a basic rule
 ====================================================
 
-Concepts: Tables, hook Points and chains
+Concepts: Tables, hook pcoints and chains
 ----------------------------------------
 
 iptables have 'tables' that group the types of rules you can perform, e.g. forwarding packets, rejecting packets. By default, you have ``nat``, ``filter`` and ``mangle``, which will be explained in due course.
@@ -154,8 +154,8 @@ If we look at the output of our golang program we can see:
 
 The program will continue to accept connections for its duration.
 
-Applying our rule
------------------
+Listing and flushing our iptable rules
+--------------------------------------
 
 Before we apply the rule we defined above, let's list all the rules in iptables, by running the command ``iptables -t filter -L -v`` as root:
 
@@ -173,7 +173,20 @@ Before we apply the rule we defined above, let's list all the rules in iptables,
 
 We can see that for the chains INPUT, FORWARD and OUTPUT in the table filter there are no rules defined.
 
-Now let's apply our rule by issuing this command (yes, it's just the same as the rule above) as root: ``iptables -t filter -A INPUT -p tcp --dport 1234 -j REJECT``.
+.. sidebar:: Default filter table
+
+	Again, since the default table is 'filter', ``iptables -t filter -L -v`` is the same as ``iptables -L -v``
+
+If we want to clear all the rules applied, we can flush them with 'iptables -F', which again works on the default 'filter' table unless specified otherwise.
+
+Applying our rule
+-----------------
+
+Now let's apply our rule by issuing this command as root. 
+
+``iptables -t filter -A INPUT -i lo -d 192.168.1.6 -p tcp --dport 1234 -j REJECT``
+
+We're slightly modifying what it was before to make it more precise. We're specifying an interface, ``lo``, and a destination, ``-d 192.168.1.6``. So the rule will match if the connection comes from localhost (our telnet command will send packets from this interface) and is directed at the specified IP address.
 
 There should be no output from the above command, but if you run the listing command again you should see our new command:
 
@@ -181,8 +194,8 @@ There should be no output from the above command, but if you run the listing com
 
 	$ iptables -t filter -L -v                                 
 	Chain INPUT (policy ACCEPT 1 packets, 164 bytes)
-	 pkts bytes target     prot opt in     out     source               destination         
-	    0     0 REJECT     tcp  --  any    any     anywhere             anywhere             tcp dpt:1234 reject-with icmp-port-unreachable
+	 pkts bytes target     prot opt in     out     source               destination
+	    0     0 REJECT     tcp  --  lo     any     anywhere             192.168.1.6          tcp dpt:1234 reject-with icmp-port-unreachable
 
 	Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
 	 pkts bytes target     prot opt in     out     source               destination         
@@ -190,14 +203,22 @@ There should be no output from the above command, but if you run the listing com
 	Chain OUTPUT (policy ACCEPT 1 packets, 52 bytes)
 	 pkts bytes target     prot opt in     out     source               destination         
 
+.. sidebar:: 'out' interface and source address
+
+	Since we're blocking packets coming in on an interface, the 'out' interface option above is not applicable and therefore 'any'. And since we don't care where IP the packet comes from (nor can be reliably tell, oftentimes even on our machine), we're looking for source connections from 'anywhere'.
+
 The new line is telling us: 
 
 #. If the protcol is TCP/IP, 
-#. from any network interface to any other network interface, 
-#. from any IP address to any other IP address, 
+#. from the 'lo', localhost, network interface to any other network interface, 
+#. from any IP address to 192.168.1.6
 #. and the destination port is 1234,
 #. then reject the packet with 'icmp-port-unreachable', the default response with you specify the REJECT target.
    
+.. sidebar:: Precise iptables rules
+
+	Above, we made the rule more precise. But if we'd left out 	``-d 192.168.1.6`` and ``-i lo``, we'd simply be saying match packets coming from any interface to any ip address, as long as they're going to a port number 1234.
+
 Communication with our program, rule in place
 ---------------------------------------------
 
