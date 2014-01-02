@@ -236,3 +236,11 @@ Here's the telnet output:
 Success!
 
 If we now flush to iptables rules with ``iptables -F`` and then verify the rule is gone with ``iptables -L -v``, and try to connect again we will see the iptables rule is no longer in place.
+
+- Use iptables logging
+ 
+- Use the output chain on iptables
+  
+- Use the forward chain on iptables
+
+- Default chain policies
