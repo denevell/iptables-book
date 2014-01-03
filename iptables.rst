@@ -308,6 +308,10 @@ Listing our iptables filters should look like this now:
 	16604   14M ACCEPT     all  --  any    any     anywhere             anywhere             state RELATED,ESTABLISHED
 	 1313  132K LOG        all  --  any    any     anywhere             anywhere             LOG level warning prefix "dropped packet: "
 
+.. sidebar:: Logging levels
+
+	You can also use the ``--log-level`` parameter in the logging rule, which will pass a syslog logging level, with 7 being debug and 4 being warning, for example. By default, it is 'warning' as can be seen above.
+
 You can find the logging in /var/log/syslog and via the command ``dmsg``.
 
 Let's now try to connect to our program over telnet we can look at the logs via ``dmesg``.
@@ -335,6 +339,3 @@ If we insert a rule to allow such connections, inserting it as the first rule wi
 	Trying 192.168.1.6...
 	Connected to 192.168.1.6.
 	Escape character is '^]'.
-	
-	
-- Logging levels
