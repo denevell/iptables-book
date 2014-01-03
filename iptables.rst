@@ -339,3 +339,10 @@ If we insert a rule to allow such connections, inserting it as the first rule wi
 	Trying 192.168.1.6...
 	Connected to 192.168.1.6.
 	Escape character is '^]'.
+
+Limiting logging
+----------------
+
+If iptables is outputting a lot of logging -- which it may do in the cases of a netbios system constantly broadcasting packets to port 137 on the network, for example -- you may want to limit the amount of logging.
+
+
