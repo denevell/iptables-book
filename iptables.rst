@@ -161,7 +161,7 @@ Before we apply the rule we defined above, let's list all the rules in iptables,
 
 .. code:: shell
 
-	$ iptables -t filter -L -v
+	# iptables -t filter -L -v
 	Chain INPUT (policy ACCEPT 2193 packets, 893K bytes)
 	 pkts bytes target     prot opt in     out     source               destination         
 
@@ -196,7 +196,7 @@ There should be no output from the above command, but if you run the listing com
 
 .. code:: shell
 
-	$ iptables -t filter -L -v                                 
+	# iptables -t filter -L -v                                 
 	Chain INPUT (policy ACCEPT 1 packets, 164 bytes)
 	 pkts bytes target     prot opt in     out     source               destination
 	    0     0 REJECT     tcp  --  lo     any     anywhere             192.168.1.6          tcp dpt:1234 reject-with icmp-port-unreachable
@@ -244,7 +244,7 @@ If we look at the output when we list the iptables, we see a 'policy ACCEPT' lin
 
 .. code:: shell
 
-	$ iptables -t filter -L -v
+	# iptables -t filter -L -v
 	Chain INPUT (policy ACCEPT 2193 packets, 893K bytes)
 	 pkts bytes target     prot opt in     out     source               destination         
 
@@ -263,8 +263,8 @@ Let's change the default policy on ``INPUT`` to ``DROP`` via ``iptables -P INPUT
 
 .. code:: shell
 
-	$ iptables -P INPUT DROP
-	$ iptables -L -v
+	# iptables -P INPUT DROP
+	# iptables -L -v
 	Chain INPUT (policy DROP 0 packets, 0 bytes)
 	 pkts bytes target     prot opt in     out     source               destination         
 	
@@ -331,7 +331,10 @@ If we insert a rule to allow such connections, inserting it as the first rule wi
 	ACCEPT     all  --  anywhere             anywhere             state RELATED,ESTABLISHED
 	LOG        all  --  anywhere             anywhere             LOG level warning prefix "dropped packet: "
 	...
-	# telnet 192.168.1.6 1234
+	$ telnet 192.168.1.6 1234
 	Trying 192.168.1.6...
 	Connected to 192.168.1.6.
 	Escape character is '^]'.
+	
+	
+- Logging levels
