@@ -244,3 +244,9 @@ If we now flush to iptables rules with ``iptables -F`` and then verify the rule 
 - Use the forward chain on iptables
 
 - Default chain policies
+
+Changing the default chain policy
+---------------------------------
+
+If we look at the output of our empty iptables command, we'll see something referring to a default policy
+
