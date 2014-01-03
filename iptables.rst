@@ -289,9 +289,25 @@ This line is similar to what we've seen before except the ``-m state`` means use
 
 Now we can talk to the internet just fine.
 
+Logging
+=======
 
-- Use iptables logging
- 
+Now our default chain policy on ``INPUT`` is DROP, we can put a logging action at the end of the chain. This will therefore catch any packets that are about to be dropped.
+
+	``iptables -A INPUT -j LOG --log-prefix "dropped packet: "``
+
+This inserts a rule at the end of our chain that simply logs the packet, outputting the phrase "dropped packet" to the beginnging of the line.
+
+Listing our iptables filters should look like this now:
+
+.. code:: shell
+
+	# iptables -L -v
+	Chain INPUT (policy DROP 1313 packets, 132K bytes)
+	 pkts bytes target     prot opt in     out     source               destination         
+	16604   14M ACCEPT     all  --  any    any     anywhere             anywhere             state RELATED,ESTABLISHED
+	 1313  132K LOG        all  --  any    any     anywhere             anywhere             LOG level warning prefix "dropped packet: "
+
 - Use the output chain on iptables
   
 - Use the forward chain on iptables
