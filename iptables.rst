@@ -308,6 +308,30 @@ Listing our iptables filters should look like this now:
 	16604   14M ACCEPT     all  --  any    any     anywhere             anywhere             state RELATED,ESTABLISHED
 	 1313  132K LOG        all  --  any    any     anywhere             anywhere             LOG level warning prefix "dropped packet: "
 
-- Use the output chain on iptables
-  
-- Use the forward chain on iptables
+You can find the logging in /var/log/syslog and via the command ``dmsg``.
+
+Let's now try to connect to our program over telnet we can look at the logs via ``dmesg``.
+
+::
+
+	dropped packet: IN=lo OUT= MAC=... SRC=192.168.1.6 DST=192.168.1.6 LEN=60 ... PROTO=TCP SPT=46498 DPT=1234 ...
+	dropped packet: IN=lo OUT= MAC=... SRC=192.168.1.6 DST=192.168.1.6 LEN=60 ... PROTO=TCP SPT=46498 DPT=1234 ...
+
+We can now see iptables is rejecting any connection coming in to our program on 192.168.1.6:1234.
+
+If we insert a rule to allow such connections, inserting it as the first rule with ``-I INPUT 1`` instead of ``-A INPUT``, we'' be allowed to access our program again.
+
+.. code:: shell
+
+	# iptables -I INPUT 1 -p tcp --dport 1234 -j ACCEPT                                                                                                                                         
+	# iptables -L
+	Chain INPUT (policy DROP)
+	target     prot opt source               destination         
+	ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:1234
+	ACCEPT     all  --  anywhere             anywhere             state RELATED,ESTABLISHED
+	LOG        all  --  anywhere             anywhere             LOG level warning prefix "dropped packet: "
+	...
+	# telnet 192.168.1.6 1234
+	Trying 192.168.1.6...
+	Connected to 192.168.1.6.
+	Escape character is '^]'.
