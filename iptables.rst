@@ -340,9 +340,14 @@ If we insert a rule to allow such connections, inserting it as the first rule wi
 	Connected to 192.168.1.6.
 	Escape character is '^]'.
 
-Limiting logging
-----------------
+.. sidebar:: Log limiting
 
-If iptables is outputting a lot of logging -- which it may do in the cases of a netbios system constantly broadcasting packets to port 137 on the network, for example -- you may want to limit the amount of logging.
-
-
+	If iptables is outputting a lot of logging -- which it may do in the cases of a netbios system constantly broadcasting packets to port 137 on the network, for example -- you may want to limit the amount of logging.
+	
+	The following command is as before, but it uses the 'limit' extension with the ``--limit 5/min`` to indicate that we should only log five entries, on average, every minute.
+	
+		``iptables -A INPUT -m limit --limit 5/min -j LOG --log-prefix "dropped packet: "``
+		
+	You can also allow bursts of with the limit module ``--limit-burst 5``, which will allow five logs in one burst, and in the later minutes will try to keep to the average specified in the ``--limit directive``
+	
+	This limiting works for other types of actions, not just logging.
