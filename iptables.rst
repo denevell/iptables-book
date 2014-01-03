@@ -276,12 +276,12 @@ Let's change the default policy on ``INPUT`` to ``DROP`` via ``iptables -P INPUT
 
 Now we can see the 'policy' line on ``INPUT`` now states ``DROP``, meaning we'd need to whitelist any open ports.
 
-Whitelisting connections
-------------------------
+Whitelisting ESTABLISHED connections with the 'state' extension
+---------------------------------------------------------------
 
 This, however, means we will no longer be able to access the internet, since when we open a connection to a website, for example, it needs to send us back packets to display the webpage.
 
-So now we need to allow iptables to accept connections when we open connections ourselves. This uses the 'state' plugin for iptables, enabled by default on my distributions.
+So now we need to allow iptables to accept connections when we open connections ourselves. This uses the 'state' match extension for iptables, enabled by default on my distributions.
 
 	``iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT``
 
