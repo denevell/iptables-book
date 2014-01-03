@@ -240,9 +240,6 @@ If we now flush to iptables rules with ``iptables -F`` and then verify the rule 
 Default chain policy
 ====================
 
-Changing the policy to DROP
-----------------------------
-
 If we look at the output when we list the iptables, we see a 'policy ACCEPT' line.
 
 .. code:: shell
@@ -257,7 +254,12 @@ If we look at the output when we list the iptables, we see a 'policy ACCEPT' lin
 	Chain OUTPUT (policy ACCEPT 2123 packets, 485K bytes)
 	 pkts bytes target     prot opt in     out     source               destination 
 
-This means if no rules match, then we'll accept the packets. Let's change the default policy on ``INPUT`` to ``DROP`` via ``iptables -P INPUT DROP``.
+This means if no rules match, then we'll accept the packets.
+
+Changing the policy to DROP
+----------------------------
+
+Let's change the default policy on ``INPUT`` to ``DROP`` via ``iptables -P INPUT DROP``.
 
 .. code:: shell
 
