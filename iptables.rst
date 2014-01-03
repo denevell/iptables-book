@@ -20,7 +20,7 @@ An example rule
 
 Let's look at the following rule that rejects TCP/IP packets on port 1234.
 
-	iptables -t filter -A INPUT -p tcp --dport 1234 -j REJECT
+	``iptables -t filter -A INPUT -p tcp --dport 1234 -j REJECT``
 
 #. The ``-t filter`` part says we're adding to the 'filter' table, the table that allows us to reject a packet.
 #. The ``-A INPUT`` part says we're appending to the chain of commands on ``INPUT`` hook point. Obviously, appending to the ``OUTPUT`` chain would be useless if we want to reject a packet hitting our network.
