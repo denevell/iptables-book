@@ -319,7 +319,7 @@ Let's now try to connect to our program over telnet we can look at the logs via 
 
 We can now see iptables is rejecting any connection coming in to our program on 192.168.1.6:1234.
 
-If we insert a rule to allow such connections, inserting it as the first rule with ``-I INPUT 1`` instead of ``-A INPUT``, we'' be allowed to access our program again.
+If we insert a rule to allow such connections, inserting it as the first rule with ``-I INPUT 1`` instead of ``-A INPUT``, we'll be allowed to access our program again and see no such logging rejecting packets to it.
 
 .. code:: shell
 
