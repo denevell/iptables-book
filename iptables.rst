@@ -238,7 +238,10 @@ Success!
 If we now flush to iptables rules with ``iptables -F`` and then verify the rule is gone with ``iptables -L -v``, and try to connect again we will see the iptables rule is no longer in place.
 
 Default chain policy
---------------------
+====================
+
+Changing the policy to DROP
+----------------------------
 
 If we look at the output when we list the iptables, we see a 'policy ACCEPT' line.
 
@@ -270,6 +273,20 @@ This means if no rules match, then we'll accept the packets. Let's change the de
 	 pkts bytes target     prot opt in     out     source               destination  
 
 Now we can see the 'policy' line on ``INPUT`` now states ``DROP``, meaning we'd need to whitelist any open ports.
+
+Whitelisting connections
+------------------------
+
+This, however, means we will no longer be able to access the internet, since when we open a connection to a website, for example, it needs to send us back packets to display the webpage.
+
+So now we need to allow iptables to accept connections when we open connections ourselves. This uses the 'state' plugin for iptables, enabled by default on my distributions.
+
+	``iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT``
+
+This line is similar to what we've seen before except the ``-m state`` means use an extension match module, 'state' in this case to match stateful connections. The ``--state`` line states that we're matching connections that have been established by us or related to a connection we started (which is the case in FTP).
+
+Now we can talk to the internet just fine.
+
 
 - Use iptables logging
  
