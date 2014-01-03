@@ -237,16 +237,42 @@ Success!
 
 If we now flush to iptables rules with ``iptables -F`` and then verify the rule is gone with ``iptables -L -v``, and try to connect again we will see the iptables rule is no longer in place.
 
+Default chain policy
+--------------------
+
+If we look at the output when we list the iptables, we see a 'policy ACCEPT' line.
+
+.. code:: shell
+
+	$ iptables -t filter -L -v
+	Chain INPUT (policy ACCEPT 2193 packets, 893K bytes)
+	 pkts bytes target     prot opt in     out     source               destination         
+
+	Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+	 pkts bytes target     prot opt in     out     source               destination         
+
+	Chain OUTPUT (policy ACCEPT 2123 packets, 485K bytes)
+	 pkts bytes target     prot opt in     out     source               destination 
+
+This means if no rules match, then we'll accept the packets. Let's change the default policy on ``INPUT`` to ``DROP`` via ``iptables -P INPUT DROP``.
+
+.. code:: shell
+
+	$ iptables -P INPUT DROP
+	$ iptables -L -v
+	Chain INPUT (policy DROP 0 packets, 0 bytes)
+	 pkts bytes target     prot opt in     out     source               destination         
+	
+	Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+	 pkts bytes target     prot opt in     out     source               destination         
+	
+	Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+	 pkts bytes target     prot opt in     out     source               destination  
+
+Now we can see the 'policy' line on ``INPUT`` now states ``DROP``, meaning we'd need to whitelist any open ports.
+
 - Use iptables logging
  
 - Use the output chain on iptables
   
 - Use the forward chain on iptables
-
-- Default chain policies
-
-Changing the default chain policy
----------------------------------
-
-If we look at the output of our empty iptables command, we'll see something referring to a default policy
-
