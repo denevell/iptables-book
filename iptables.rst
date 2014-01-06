@@ -355,3 +355,11 @@ If we insert a rule to allow such connections, inserting it as the first rule wi
 	You can also allow bursts of with the limit module ``--limit-burst 5``, which will allow five logs in one burst, and in the later minutes will try to keep to the average specified in the ``--limit directive``
 	
 	This limiting works for other types of actions, not just logging.
+
+The filter table
+================
+
+Previously we dealt with accepting and rejecting packets on the INPUT chain of the filter table. We will now look at the OUTPUT and FORWARD chains of the filter table.
+
+The OUTPUT chain
+----------------
