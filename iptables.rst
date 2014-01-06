@@ -7,7 +7,7 @@ iptables
 Bootstrapping your iptables knowledge
 =====================================
 
-This section will introduce you to the basics of iptables. We will do some setup for the examples, apply an iptables rule that rejects connections, apply a rule that accepts certain types of connections, add some logging to it and along the way we'll look at the extensions to track connection state and limit matches.
+This section will introduce you to the basics of iptables. We will do some setup for the examples, apply an iptables rule that rejects connections, apply a rule that accepts certain types of connections, change a default iptables policy, add some logging to it and along the way we'll look at the extensions to track connection state and limit matches.
 
 Basic concepts, setup and a basic rule
 --------------------------------------
