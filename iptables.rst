@@ -7,6 +7,8 @@ iptables
 The basics
 ==========
 
+This section will introduce you to the basics of iptables. We will do some setup for the examples, apply an iptables rule that rejects connections, apply a rule that accepts certain types of connections, add some logging to it and along the way we'll look at the extensions to track connection state and limit matches.
+
 Introduction: Basic concepts, setup and a basic rule
 ----------------------------------------------------
 
