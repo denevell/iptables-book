@@ -4,19 +4,21 @@ iptables
 
 .. contents::
 
+The basics
+==========
 
 Introduction: Basic concepts, setup and a basic rule
-====================================================
+----------------------------------------------------
 
 Concepts: Tables, hook points and chains
-----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 iptables have 'tables' that group the types of rules you can perform, e.g. forwarding packets, rejecting packets. By default, you have ``nat``, ``filter`` and ``mangle``, which will be explained in due course.
 
 There are 'hook points' that allow you to hook into the network routing. At these points, you can insert your firewall rules. By default, you have ``PREROUTING``, ``INPUT``, ``FORWARD``, ``POSTROUTING`` and ``OUTPUT``, depending on what table you use. The rules attached to each hook point are refered to as  'chains'.
 
 An example rule
----------------
+^^^^^^^^^^^^^^^
 
 Let's look at the following rule that rejects TCP/IP packets on port 1234.
 
@@ -32,7 +34,7 @@ Let's look at the following rule that rejects TCP/IP packets on port 1234.
 	The default table is the 'filter' table, so you could leave out the ``-t filter`` part in the above example.
 
 Network setup for example programs
-----------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Normally, iptables controls traffic *between* networks, i.e your network and an external network. You may not, however, have the luxury of multiple networks to play with. As such, we will create a new virtual network. 
 
@@ -69,7 +71,7 @@ We are doing this since otherwise both our network program and client program wo
 			RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)		
 
 Network program for the examples
-----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We will use a simple 'golang' program for our forthcoming examples. It listens for network connections on our newly created IP address above and outputs its input to the standard output.
 
@@ -120,7 +122,7 @@ Take the code below and save it in a file named 'net.go'.
 We can start this by running ``go run net.go``.
 
 Communicating with our program
-------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We will use ``telnet`` to communicate with our example program. Here's an example of it in use:
 
@@ -155,7 +157,7 @@ If we look at the output of our golang program we can see:
 The program will continue to accept connections for its duration.
 
 Listing and flushing our iptable rules
---------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Before we apply the rule we defined above, let's list all the rules in iptables, by running the command ``iptables -t filter -L -v`` as root:
 
@@ -180,7 +182,7 @@ We can see that for the chains INPUT, FORWARD and OUTPUT in the table filter the
 If we want to clear all the rules applied, we can flush them with 'iptables -F', which again works on the default 'filter' table unless specified otherwise.
 
 Applying our rule
------------------
+^^^^^^^^^^^^^^^^^
 
 Now let's apply our rule by issuing this command as root. 
 
@@ -220,7 +222,7 @@ The new line is telling us:
 #. then reject the packet with 'icmp-port-unreachable', the default response with you specify the REJECT target.
 
 Communication with our program, rule in place
----------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 As you may expect, if we try to connect to our program now, we'll get a rejected response. 
 
@@ -238,7 +240,7 @@ Success!
 If we now flush to iptables rules with ``iptables -F`` and then verify the rule is gone with ``iptables -L -v``, and try to connect again we will see the iptables rule is no longer in place.
 
 Default chain policy
-====================
+--------------------
 
 If we look at the output when we list the iptables, we see a 'policy ACCEPT' line.
 
@@ -257,7 +259,7 @@ If we look at the output when we list the iptables, we see a 'policy ACCEPT' lin
 This means if no rules match, then we'll accept the packets.
 
 Changing the policy to DROP
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Let's change the default policy on ``INPUT`` to ``DROP`` via ``iptables -P INPUT DROP``.
 
@@ -277,7 +279,7 @@ Let's change the default policy on ``INPUT`` to ``DROP`` via ``iptables -P INPUT
 Now we can see the 'policy' line on ``INPUT`` now states ``DROP``, meaning we'd need to whitelist any open ports.
 
 Whitelisting ESTABLISHED connections with the 'state' extension
----------------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This, however, means we will no longer be able to access the internet, since when we open a connection to a website, for example, it needs to send us back packets to display the webpage.
 
@@ -290,7 +292,7 @@ This line is similar to what we've seen before except the ``-m state`` means use
 Now we can talk to the internet just fine.
 
 Logging
-=======
+-------
 
 Now our default chain policy on ``INPUT`` is DROP, we can put a logging action at the end of the chain. This will therefore catch any packets that are about to be dropped.
 
