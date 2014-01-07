@@ -363,3 +363,59 @@ Previously we dealt with accepting and rejecting packets on the INPUT chain of t
 
 The OUTPUT chain
 ----------------
+
+In the filter table, the OUTPUT chain will be hit when either a service, like our program above or an application like our web browser, tries to send a packet out from our network.
+
+Let's use the ping program to talk to an external service via IP address. But to get that IP address, we'll use ``nslookup`` to find Wikipedia's IP address.
+
+::
+
+	$ nslookup wikipedia.com
+	...
+	Non-authoritative answer:
+	Name:   wikipedia.com
+	Address: 208.80.154.224
+
+If we go to the IP address we found, it should go to a wikipedia page. More importantly, let's ping that address to make sure it's there.
+
+::
+
+	$ ping 208.80.154.224
+	PING 208.80.154.224 (208.80.154.224) 56(84) bytes of data.
+	64 bytes from 208.80.154.224: icmp_seq=1 ttl=54 time=195 ms
+	64 bytes from 208.80.154.224: icmp_seq=2 ttl=54 time=117 ms
+	64 bytes from 208.80.154.224: icmp_seq=3 ttl=54 time=117 ms
+	
+Now let's change our iptables OUTPUT chain to block access to that IP address.
+
+::
+
+	iptables -A OUTPUT -d 208.80.154.224 -j REJECT
+	# iptables -L -v
+	Chain INPUT (policy ACCEPT 114 packets, 23344 bytes)
+	 pkts bytes target     prot opt in     out     source               destination         
+	
+	Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+	 pkts bytes target     prot opt in     out     source               destination         
+	
+	Chain OUTPUT (policy ACCEPT 99 packets, 9795 bytes)
+	 pkts bytes target     prot opt in     out     source               destination         
+	    4   336 REJECT     all  --  any    any     anywhere             text-lb.eqiad.wikimedia.org
+	    
+Now let's try that ping again. Press control-C quickly, else your terminal will fill up with 'Destination Port Unreachable' lines.
+
+::
+
+	$ ping 208.80.154.224
+	From 10.40.0.109 icmp_seq=1 Destination Port Unreachable
+	From 10.40.0.109 icmp_seq=1 Destination Port Unreachable
+	From 10.40.0.109 icmp_seq=1 Destination Port Unreachable
+	From 10.40.0.109 icmp_seq=1 Destination Port Unreachable
+	From 10.40.0.109 icmp_seq=1 Destination Port Unreachable
+	From 10.40.0.109 icmp_seq=1 Destination Port Unreachable
+	From 10.40.0.109 icmp_seq=1 Destination Port Unreachable
+	From 10.40.0.109 icmp_seq=1 Destination Port Unreachable
+
+It's telling us that our local computer, 10.40.0.109 in my case, is telling the ``ping`` program that the destionation port is unreachable.
+
+It's now a good idea to flush this rule, else we won't be able to access Wikipedia anymore.
