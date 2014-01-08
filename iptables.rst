@@ -425,7 +425,7 @@ Now let's change our iptables OUTPUT chain to block access to that IP address.
 
 ::
 
-	iptables -A OUTPUT -d 208.80.154.224 -j REJECT
+	#iptables -A OUTPUT -d 208.80.154.224 -j REJECT
 	# iptables -L -v
 	Chain INPUT (policy ACCEPT 114 packets, 23344 bytes)
 	 pkts bytes target     prot opt in     out     source               destination         
@@ -454,3 +454,7 @@ Now let's try that ping again. Press control-C quickly, else your terminal will 
 It's telling us that our local computer, 10.40.0.109 in my case, is telling the ``ping`` program that the destionation port is unreachable.
 
 It's now a good idea to delete this rule, else we won't be able to access Wikipedia anymore.
+
+The FORWARD chain
+-----------------
+
