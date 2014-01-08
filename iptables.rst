@@ -184,11 +184,6 @@ We can see that for the chains INPUT, FORWARD and OUTPUT in the table filter the
 
 	Again, since the default table is 'filter', ``iptables -t filter -L -v`` is the same as ``iptables -L -v``
 
-Flushing
-________
-
-If we want to clear all the rules applied, we can flush them with 'iptables -F', which again works on the default 'filter' table unless specified otherwise.
-
 Deleting
 ________
 
@@ -216,6 +211,12 @@ If we want to delete only one rule, we can use the ``-D <number>`` command, usin
 	
 	Chain OUTPUT (policy ACCEPT)
 	num  target     prot opt source               destination    
+
+Flushing
+________
+
+If we want to clear all the rules applied, we can flush them with 'iptables -F', which again works on the default 'filter' table unless specified otherwise.
+
 
 Applying our rule
 ^^^^^^^^^^^^^^^^^
