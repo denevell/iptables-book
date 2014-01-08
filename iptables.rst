@@ -453,4 +453,4 @@ Now let's try that ping again. Press control-C quickly, else your terminal will 
 
 It's telling us that our local computer, 10.40.0.109 in my case, is telling the ``ping`` program that the destionation port is unreachable.
 
-It's now a good idea to flush this rule, else we won't be able to access Wikipedia anymore.
+It's now a good idea to delete this rule, else we won't be able to access Wikipedia anymore.
