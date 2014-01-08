@@ -158,8 +158,11 @@ If we look at the output of our golang program we can see:
 
 The program will continue to accept connections for its duration.
 
-Listing and flushing our iptable rules
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Listing, deleting and flushing our iptable rules
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Listing
+_______
 
 Before we apply the rule we defined above, let's list all the rules in iptables, by running the command ``iptables -t filter -L -v`` as root:
 
@@ -181,12 +184,43 @@ We can see that for the chains INPUT, FORWARD and OUTPUT in the table filter the
 
 	Again, since the default table is 'filter', ``iptables -t filter -L -v`` is the same as ``iptables -L -v``
 
+Flushing
+________
+
 If we want to clear all the rules applied, we can flush them with 'iptables -F', which again works on the default 'filter' table unless specified otherwise.
+
+Deleting
+________
+
+If we want to delete only one rule, we can use the ``-D <number>`` command, using ``--line-numbers`` to find the numbers:
+
+::
+
+	# iptables -L --line-numbers                                                                                                                                                                
+	Chain INPUT (policy ACCEPT)
+	num  target     prot opt source               destination         
+	1    REJECT     tcp  --  anywhere             anywhere             tcp dpt:1234 reject-with icmp-port-unreachable
+	
+	Chain FORWARD (policy ACCEPT)
+	num  target     prot opt source               destination         
+	
+	Chain OUTPUT (policy ACCEPT)
+	num  target     prot opt source               destination         
+	# iptables -D INPUT 1
+	# iptables -L --line-numbers
+	Chain INPUT (policy ACCEPT)
+	num  target     prot opt source               destination         
+	
+	Chain FORWARD (policy ACCEPT)
+	num  target     prot opt source               destination         
+	
+	Chain OUTPUT (policy ACCEPT)
+	num  target     prot opt source               destination    
 
 Applying our rule
 ^^^^^^^^^^^^^^^^^
 
-Now let's apply our rule by issuing this command as root. 
+Now let's apply our rule by issuing this command as root .
 
 ``iptables -t filter -A INPUT -i lo -d 192.168.1.6 -p tcp --dport 1234 -j REJECT``
 
